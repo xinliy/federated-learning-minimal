@@ -28,15 +28,6 @@ img_rows, img_cols = 28, 28
 
 # the data, split between train and test sets
 (x_train, y_train), (x_test, y_test) = mnist.load_data()
-# np.save('x_train',x_train)
-# np.save('y_train',y_train)
-# np.save('x_test',x_test)
-# np.save('y_test',y_test)
-# y_train = np.load('y_train.npy')
-# x_train = np.load('x_train.npy')
-# x_test = np.load('x_test.npy')
-# y_test = np.load('y_test.npy')
-
 
 if K.image_data_format() == 'channels_first':
     x_train = x_train.reshape(x_train.shape[0], 1, img_rows, img_cols)
@@ -122,9 +113,6 @@ for r in range(t_round):
         init(model)
         model.set_weights(global_model.get_weights())
         param_before = np.asarray(model.get_weights())
-        # if param_before.shape[0] == 0:
-        #     param_before = np.asarray([np.zeros((784, 784)), np.zeros(
-        #         (784,)), np.zeros((784, 10)), np.zeros((10,))])
 
         # Get index list
         ind = client_data_list[c]
@@ -143,7 +131,7 @@ for r in range(t_round):
         # Change this part according to FedAvg.
         weight_acc += (param_after) * (1 / num_clients)
         score = model.evaluate(x_test, y_test, verbose=0)
-        print('Client'+str(c+1)+' with accuracy:', score[1])
+        print('Client: '+str(c+1)+' with accuracy:', score[1])
 
     global_model.set_weights(weight_acc)
     score = global_model.evaluate(x_test, y_test, verbose=0)
@@ -151,8 +139,6 @@ for r in range(t_round):
     print('Global accuracy:', score[1])
     acc_list.append(score[1])
 print(acc_list)
-
-
 import matplotlib.pyplot as plt
 plt.plot(acc_list)
 plt.show()
